@@ -9,21 +9,6 @@ jobs:
       - checkout
       - run: echo "This is a test step"
 
-  chelsea:
-    machine: true
-    steps:
-      - checkout
-
-      - run: 
-          command: |
-            gem install chelsea
-            chelsea -f Gemfile.lock -t json | tail -n1 > chelsea-output.json      # tail -n1 to remove chelsea banner
-          when: on_fail               # Even if the job fails, continue to the next stages
-
-      - store_artifacts:
-          path: chelsea-output.json
-          destination: chelsea-artifact
-
   integration:
     steps:
       - checkout
@@ -31,7 +16,6 @@ jobs:
           command: |
             echo "This is an integration step"
             exit 1
-          when: always                    # Even if the job fails, continue to the next stages
 
   prod:
     steps:
@@ -45,13 +29,10 @@ workflows:
       - build
       - test:
           requires:
-            - build
-      - chelsea:
-          requires:
-            - test
+            - build 
       - integration:
           requires:
-            - chelsea
+            - test
       - prod:
           type: approval
           requires:
