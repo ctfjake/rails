@@ -41,9 +41,12 @@ workflows:
       - test:
           requires:
             - build 
-      - integration:
+      - bundler-audit:
           requires:
             - test
+      - integration:
+          requires:
+            - bundler-audit
       - prod:
           type: approval
           requires:
