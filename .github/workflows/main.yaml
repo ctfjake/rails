@@ -27,12 +27,13 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 2.6.6 # Not needed with a .ruby-version file
-          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
-
       - run: |
+          curl -sSL https://rvm.io/mpapis.asc | gpg2 --import -
+          curl -sSL https://rvm.io/pkuczynski.asc | gpg2 --import -
+          curl -sSL https://get.rvm.io | bash -s stable
+          source /etc/profile.d/rvm.sh
+          rvm install "ruby-2.6.5"
+          gem install --user-install chelsea
           gem install chelsea -v 0.0.27
           chelsea -f Gemfile.lock -t json | tail -n1 > chelsea-output.json      # tail -n1 to remove chelsea banner
 
