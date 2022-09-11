@@ -1,33 +1,30 @@
 jobs:
   build:
-    docker:
-      - image: python:3.6 
     steps:
       - checkout
       - run: echo "This is a build step"    # similar to "script" in GitLab
 
   test:
-    docker:
-      - image: python:3.6 
     steps:
       - checkout
       - run: echo "This is a test step"
 
-  bundler-audit:
+  chelsea:
     machine: true
     steps:
       - checkout
 
       - run: 
-          command: docker run --rm -v $(pwd):/src -w /src hysnsec/bundle-audit check --format json --output bundle-audit-output.json
-          when: always
+          command: |
+            gem install chelsea
+            chelsea -f Gemfile.lock -t json | tail -n1 > chelsea-output.json      # tail -n1 to remove chelsea banner
+          when: on_fail               # Even if the job fails, continue to the next stages
+
       - store_artifacts:
-          path: bundle-audit-output.json
-          destination: bundler-audit-artifact
+          path: chelsea-output.json
+          destination: chelsea-artifact
 
   integration:
-    docker:
-      - image: python:3.6 
     steps:
       - checkout
       - run:
@@ -37,8 +34,6 @@ jobs:
           when: always                    # Even if the job fails, continue to the next stages
 
   prod:
-    docker:
-      - image: python:3.6 
     steps:
       - checkout
       - run: echo "This is a deploy step."
@@ -51,12 +46,12 @@ workflows:
       - test:
           requires:
             - build
-      - bundler-audit:
+      - chelsea:
           requires:
             - test
       - integration:
           requires:
-            - bundler-audit
+            - chelsea
       - prod:
           type: approval
           requires:
