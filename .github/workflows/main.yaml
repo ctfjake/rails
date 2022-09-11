@@ -28,7 +28,6 @@ jobs:
       - uses: actions/checkout@v2
 
       - run: |
-          rvm install "ruby-2.6.5"
           gem install --user-install chelsea
           gem install chelsea -v 0.0.27
           chelsea -f Gemfile.lock -t json | tail -n1 > chelsea-output.json      # tail -n1 to remove chelsea banner
