@@ -28,10 +28,6 @@ jobs:
       - uses: actions/checkout@v2
 
       - run: |
-          curl -sSL https://rvm.io/mpapis.asc | gpg2 --import -
-          curl -sSL https://rvm.io/pkuczynski.asc | gpg2 --import -
-          curl -sSL https://get.rvm.io | bash -s stable
-          source /etc/profile.d/rvm.sh
           rvm install "ruby-2.6.5"
           gem install --user-install chelsea
           gem install chelsea -v 0.0.27
