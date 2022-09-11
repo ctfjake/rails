@@ -33,7 +33,7 @@ jobs:
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
 
       - run: |
-          gem install chelsea
+          gem install chelsea -v 0.0.27
           chelsea -f Gemfile.lock -t json | tail -n1 > chelsea-output.json      # tail -n1 to remove chelsea banner
 
       - uses: actions/upload-artifact@v2
