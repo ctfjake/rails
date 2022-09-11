@@ -2,7 +2,7 @@ name: rails                                  # workflow name
 
 on:
   push:                                       
-    branches:                                 # similar to "only" in GitLab
+    branches:                                 # similaar to "only" in GitLab
       - main
 
 jobs:
